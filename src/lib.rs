@@ -71,7 +71,11 @@ impl<T> MyVec<T> {
         }
     }
     pub fn get(&self, index: usize) -> Option<&T> {
-        todo!()
+        if index >= self.len {
+            return None;
+        }
+        let item = unsafe { &*self.ptr.as_ptr().add(index) };
+        Some(item)
     }
     pub fn len(&self) -> usize {
         self.len
@@ -102,10 +106,14 @@ mod tests {
     fn it_works() {
         let mut vec: MyVec<usize> = MyVec::new();
         vec.push(1usize);
-        vec.push(1usize);
-        vec.push(1usize);
-        vec.push(1usize);
-        vec.push(1usize);
+        vec.push(2usize);
+        vec.push(3usize);
+        vec.push(4usize);
+        vec.push(5usize);
+
+        for n in 0..vec.len() {
+            assert_eq!(vec.get(n), Some(&(n + 1)));
+        }
 
         assert_eq!(vec.capacity(), 8);
         assert_eq!(vec.len(), 5);
